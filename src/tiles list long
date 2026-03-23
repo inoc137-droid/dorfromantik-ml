@@ -1,0 +1,108 @@
+0: tt.EdgeType.Reis,tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Reis,tt.EdgeType.Reis
+1: tt.EdgeType.Strasse,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Reis
+2: tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Sakura
+3: tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Dorf
+4: tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+5: tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+6: tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis
+7: tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Reis # Reis Blüte 1
+8: tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Fluss,tt.EdgeType.Reis,tt.EdgeType.Reis
+9: tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+10: tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Strasse,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+11: tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+12: tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Sakura # Sakura Blüte 1
+13: tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Sakura # Sakura Blüte 2
+14: tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+15: tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Reis,tt.EdgeType.Reis
+16: tt.EdgeType.Fluss,tt.EdgeType.Fluss,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf # Dorf Blüte 1
+17: tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Dorf,tt.EdgeType.Dorf # Strassen Blüte 1
+18: tt.EdgeType.Fluss,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Fluss,tt.EdgeType.Dorf,tt.EdgeType.Dorf # Fluss Blüte 1
+19: tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Dorf # Dorf Blüte 2
+20: tt.EdgeType.Strasse,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Sakura # Strassen Blüte 2
+21: tt.EdgeType.Strasse,tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura # Sakura Blüte 3
+22: tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Sakura
+23: tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Fluss,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+24: tt.EdgeType.Strasse,tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Wiese
+25: tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Fluss,tt.EdgeType.Reis,tt.EdgeType.Reis # Fluss Blüte 2
+26: tt.EdgeType.Strasse,tt.EdgeType.Strasse,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis # Reis Blüte 2
+27: tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Fluss,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Reis
+28: tt.EdgeType.Fluss,tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Wiese
+29: tt.EdgeType.Fluss,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Sakura # Fluss Blüte 3
+30: tt.EdgeType.Sakura,tt.EdgeType.Wiese,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+31: tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Wiese,tt.EdgeType.Dorf # Dorf Blüte 3
+32: tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Reis # Reis Blüte 3
+33: tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+3tt.EdgeType.Strasse: tt.EdgeType.Strasse,tt.EdgeType.Reis,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Sakura,tt.EdgeType.Sakura # Strassen Blüte tt.EdgeType.Dorf
+35: tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Strasse,tt.EdgeType.Dorf,tt.EdgeType.Dorf,tt.EdgeType.Dorf
+36: tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Dorf,tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+37: tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Fluss,tt.EdgeType.Sakura,tt.EdgeType.Sakura,tt.EdgeType.Sakura
+38: tt.EdgeType.Fluss,tt.EdgeType.Fluss,tt.EdgeType.Wiese,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Wiese
+39: tt.EdgeType.Strasse,tt.EdgeType.Reis,tt.EdgeType.Reis,tt.EdgeType.Strasse,tt.EdgeType.Wiese,tt.EdgeType.Sakura
+
+
+
+
+46: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Wiese), name="Strassenkreuzung"),
+47: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Fluss), name="See"),
+48: TileDef((tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura), name="Moossammlerin"),
+49: TileDef((tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis), name="Reisbäuerin"),
+50: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf), name="Sumoringer"),
+51: TileDef((tt.EdgeType.Heisse_Quellen, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese), name="Einsiedler"),
+52: TileDef((tt.EdgeType.Vulkan, tt.EdgeType.Vulkan, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese), name="Fujiyama", flag_type=tt.EdgeType.Sakura),
+53: TileDef((tt.EdgeType.Vulkan, tt.EdgeType.Vulkan, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese), name="Fujiyama", flag_type=tt.EdgeType.Reis),
+54: TileDef((tt.EdgeType.Vulkan, tt.EdgeType.Vulkan, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese), name="Fujiyama", flag_type=tt.EdgeType.Dorf),
+55: TileDef((tt.EdgeType.Heisse_Quellen, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese), name="Heiße Quellen"),
+56: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Heisse_Quellen), name="Heiße Quellen"),
+57: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Wiese), name="Kalligraph"),
+58: TileDef((tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese), name="Kartograph"),
+59: TileDef((tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese), name="Sternwarte"),
+60: TileDef((tt.EdgeType.Bunte_Fahne, tt.EdgeType.Fluss, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Wiese), name="Bunte_Flagge", flag_type=tt.EdgeType.Bunte_Fahne),
+61: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese), name="Daimyo"),
+62: TileDef((tt.EdgeType.Wolken, tt.EdgeType.Wolken, tt.EdgeType.Wiese, tt.EdgeType.Wolken, tt.EdgeType.Wolken, tt.EdgeType.Wiese), name="Kleine Wolken"),
+63: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Strasse, tt.EdgeType.Reis, tt.EdgeType.Wiese), name="Ochsenkarren"),
+64: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Reis), name="Handelsposten"),
+65: TileDef((tt.EdgeType.Wolken, tt.EdgeType.Wolken, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese), name="Poet"),
+66: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Sakura), name="Schiff"),
+67: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Fluss, tt.EdgeType.Sakura, tt.EdgeType.Wiese), name="Anlegestelle"),
+68: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Sakura), name="Tempel"),
+69: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Reis), name="Tempel"),
+70: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Dorf), name="Tempel"),
+71: TileDef((tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura)),
+72: TileDef((tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+73: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+74: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Reis)),
+75: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Dorf)),
+76: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Fluss, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura)),
+77: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura)),
+78: TileDef((tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis)),
+79: TileDef((tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+80: TileDef((tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Reis)),
+81: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese)),
+82: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Fluss)),
+83: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Dorf)),
+84: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Dorf)),
+85: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf)),
+86: TileDef((tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Dorf)),
+87: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+88: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Dorf, tt.EdgeType.Dorf)),
+89: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese)),
+90: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese)),
+91: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+92: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+93: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Strasse, tt.EdgeType.Fluss, tt.EdgeType.Wiese)),
+94: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Strasse)),
+95: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf)),
+96: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese)),
+97: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Fluss, tt.EdgeType.Strasse, tt.EdgeType.Wiese)),
+98: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Strasse, tt.EdgeType.Strasse, tt.EdgeType.Wiese)),
+99: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+100: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Wiese, tt.EdgeType.Wiese)),
+101: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese)),
+102: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese)),
+103: TileDef((tt.EdgeType.Strasse, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese)),
+104: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Sakura, tt.EdgeType.Wiese)),
+105: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Reis, tt.EdgeType.Wiese)),
+106: TileDef((tt.EdgeType.Fluss, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Dorf, tt.EdgeType.Wiese)),
+107: TileDef((tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Heisse_Quellen, tt.EdgeType.Wiese)),
+108: TileDef((tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Sakura, tt.EdgeType.Wiese, tt.EdgeType.Heisse_Quellen, tt.EdgeType.Wiese)),
+109: TileDef((tt.EdgeType.Reis, tt.EdgeType.Wiese, tt.EdgeType.Dorf, tt.EdgeType.Wiese, tt.EdgeType.Heisse_Quellen, tt.EdgeType.Wiese))

@@ -1,0 +1,13 @@
+- Fotografieren der Tiles. Automatische Erkennen der Ränder, bzw. 6-Kant Ausschnitt. Skalieren auf gleiche Größe,
+    Belichtung, ....
+- Einfügen der Auftragsplättchen + Auftragsmarker
+
+1. Ziel:
+- randomisert spielbare Versionen auf Bepunktung prüfen. Ohne Aufträge, lediglich Größen der zusammenhängenden
+    (+abgeschlossenen Gebiete) + (automatische/) manuelle+optische Verifizierung
+
+- Einfügen der besonderen Items: einmaliges ändern der Auftragsmarker (Reiskuchen, etc,...)
+- Einfügen der Tempel
+- Einfügen der Brücken
+- Einfügen der Schreine
+- Bepunktung Einführen

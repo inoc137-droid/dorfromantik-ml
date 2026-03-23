@@ -1,0 +1,13 @@
+s.phase:
+        "place_tile"
+        "choose_next_tile_source"
+
+action.kind:
+        "place_tile"
+        "store_tile"
+        "choose_source"
+
+kind = "choose_source", choice:
+        "storehouse"
+        "kontor"
+        "main"
