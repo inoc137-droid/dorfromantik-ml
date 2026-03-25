@@ -5,7 +5,7 @@ import random
 
 from dorfromantik.state import State
 from dorfromantik.rules import legal_actions, is_legal_placement
-from dorfromantik.tiles import TILES, ROT_EDGES, ROAD_EDGE_INDICES_BY_TILE_ROT, RIVER_EDGE_INDICES_BY_TILE_ROT
+from dorfromantik.tiles import TILES, ROAD_EDGE_INDICES_BY_TILE_ROT, RIVER_EDGE_INDICES_BY_TILE_ROT
 from dorfromantik.dsu_update import update_all_dsus_after_place, update_neighbor_dsus_after_place
 from dorfromantik.action import Action
 from dorfromantik.stepinfo import StepInfo
@@ -97,6 +97,59 @@ class Env:
             return self._step_place_tile(s, action)
 
         return self._illegal_action_result(s, action)
+
+    def _step_choose_next_tile_source(self, s: State, action: Action):
+        if action.kind != "choose_source":
+            return self._illegal_action_result(s, action)
+
+        chosen_source = None
+        drawn_tile = None
+
+        if action.choice == "storehouse":
+            if s.storehouse_tile is None:
+                return self._illegal_action_result(s, action)
+            drawn_tile = s.storehouse_tile
+            s.current_tile = s.storehouse_tile
+            s.storehouse_tile = None
+            chosen_source = "storehouse"
+            s.phase = "place_tile"
+
+        elif action.choice == "kontor":
+            if s.kontor_tile is None:
+                return self._illegal_action_result(s, action)
+            drawn_tile = s.kontor_tile
+            s.current_tile = s.kontor_tile
+            s.kontor_tile = None
+            chosen_source = "kontor"
+            s.phase = "place_tile"
+
+        elif action.choice == "main":
+            chosen_source = "main"
+            self._draw_main_tile(s)
+            drawn_tile = s.current_tile
+
+        elif action.choice == "task":
+            if not self._should_offer_task_tile(s):
+                return self._illegal_action_result(s, action)
+            chosen_source = "task"
+            self._draw_task_tile(s)
+            drawn_tile = s.current_tile
+
+        else:
+            return self._illegal_action_result(s, action)
+
+        next_actions = self.legal_actions(s)
+        done = len(next_actions) == 0
+
+        info = StepInfo(
+            last_action=action,
+            chosen_source=chosen_source,
+            drawn_tile=drawn_tile,
+            next_tile=s.current_tile,
+            next_phase=s.phase,
+            n_legal_next=len(next_actions)
+        )
+        return s, 0, done, info
 
     def _step_place_tile(self, s: State, action: Action):
         if s.current_tile is None:
@@ -226,59 +279,6 @@ class Env:
         # -------------------------------------------------
         return self._illegal_action_result(s, action)
 
-    def _step_choose_next_tile_source(self, s: State, action: Action):
-        if action.kind != "choose_source":
-            return self._illegal_action_result(s, action)
-
-        chosen_source = None
-        drawn_tile = None
-
-        if action.choice == "storehouse":
-            if s.storehouse_tile is None:
-                return self._illegal_action_result(s, action)
-            drawn_tile = s.storehouse_tile
-            s.current_tile = s.storehouse_tile
-            s.storehouse_tile = None
-            chosen_source = "storehouse"
-            s.phase = "place_tile"
-
-        elif action.choice == "kontor":
-            if s.kontor_tile is None:
-                return self._illegal_action_result(s, action)
-            drawn_tile = s.kontor_tile
-            s.current_tile = s.kontor_tile
-            s.kontor_tile = None
-            chosen_source = "kontor"
-            s.phase = "place_tile"
-
-        elif action.choice == "main":
-            chosen_source = "main"
-            self._draw_main_tile(s)
-            drawn_tile = s.current_tile
-
-        elif action.choice == "task":
-            if not self._should_offer_task_tile(s):
-                return self._illegal_action_result(s, action)
-            chosen_source = "task"
-            self._draw_task_tile(s)
-            drawn_tile = s.current_tile
-
-        else:
-            return self._illegal_action_result(s, action)
-
-        next_actions = self.legal_actions(s)
-        done = len(next_actions) == 0
-
-        info = StepInfo(
-            last_action=action,
-            chosen_source=chosen_source,
-            drawn_tile=drawn_tile,
-            next_tile=s.current_tile,
-            next_phase=s.phase,
-            n_legal_next=len(next_actions)
-        )
-        return s, 0, done, info
-
 # Legale Aktionen
 
     def legal_actions(self, s: State) -> list[Action]:
@@ -309,38 +309,43 @@ class Env:
 
             for pos, rot in legal_actions(s, tile_id):
                 # jede mögliche Kombination aus (pos, rot) um Tile zu legen
+                # wird bei Auftrags-, Sonder- und normalen Landschaftsplättchen ausgelöst
                 actions.append(Action(kind="place_tile", pos=pos, rot=rot))
 
                 if not is_landscape:
                     continue
 
                 if s.sackgasse_available:
-                    road_eges = ROAD_EDGE_INDICES_BY_TILE_ROT[(tile_id,rot)]
-                    for edge_idx in road_eges:
-                        actions.append(
-                            Action(
-                                kind="place_tile",
-                                pos=pos,
-                                rot=rot,
-                                edge_override_edge=edge_idx,
-                                edge_override_from=tt.EdgeType.Strasse,
-                                edge_override_to=tt.EdgeType.Wiese
+                    road_edges = ROAD_EDGE_INDICES_BY_TILE_ROT.get((tile_id, rot), ())
+                    for edge_idx in road_edges:
+                        edge_overrides = {edge_idx: tt.EdgeType.Wiese}
+                        if is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
+                            actions.append(
+                                Action(
+                                    kind="place_tile",
+                                    pos=pos,
+                                    rot=rot,
+                                    edge_override_edge=edge_idx,
+                                    edge_override_from=tt.EdgeType.Strasse,
+                                    edge_override_to=tt.EdgeType.Wiese
+                                )
                             )
-                        )
 
                 if s.staudamm_available:
-                    road_eges = RIVER_EDGE_INDICES_BY_TILE_ROT[(tile_id,rot)]
-                    for edge_idx in road_eges:
-                        actions.append(
-                            Action(
-                                kind="place_tile",
-                                pos=pos,
-                                rot=rot,
-                                edge_override_edge=edge_idx,
-                                edge_override_from=tt.EdgeType.Fluss,
-                                edge_override_to=tt.EdgeType.Wiese
+                    river_edges = RIVER_EDGE_INDICES_BY_TILE_ROT.get((tile_id, rot), ())
+                    for edge_idx in river_edges:
+                        edge_overrides = {edge_idx: tt.EdgeType.Wiese}
+                        if is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
+                            actions.append(
+                                Action(
+                                    kind="place_tile",
+                                    pos=pos,
+                                    rot=rot,
+                                    edge_override_edge=edge_idx,
+                                    edge_override_from=tt.EdgeType.Fluss,
+                                    edge_override_to=tt.EdgeType.Wiese
+                                )
                             )
-                        )
 
             # Möglichkeiten das Landschaftsplättchen ins Warenhaus oder Kontor zu legen
             if is_landscape:
@@ -358,10 +363,10 @@ class Env:
 
     def _advance_after_turn(self, s: State) -> None:
         """
-        Bereitet den nächsten Schritt nach einem abgeschlossenen Zug vor.
+        Wenn Tile in Lagerhaus/Kontor, dann s.Phase="choose_next_tile_source".
+        Sonst: _draw_task_tile, falls nötig oder _draw_main_tile
 
-        Wenn ein Tile in Lagerhaus/Kontor liegt, gibt es immer eine Quellenwahl:
-        gespeichertes Tile aus Lagerhaus/Kontor ODER normales nächstes Tile (Task/Main je nach Spielsituation)
+        :param s: Derzeitiger State des Spiels
         """
         has_stored_tile = (s.storehouse_tile is not None) or (s.kontor_tile is not None)
 
@@ -380,7 +385,7 @@ class Env:
 
 # Auftragsplättchen Logik
 
-    def _number_of_tasks_active(self, s:State) -> int:
+    def _number_of_tasks_active(self, s: State) -> int:
         return 3 + self._fujiyama_task_solved(s)
 
     def _should_offer_task_tile(self, s: State) -> bool:
@@ -517,40 +522,3 @@ class Env:
         return False
 
     ##### Staudamm und Sackgasse #####
-
-    def _append_edge_override_actions(
-            self,
-            actions: list[Action],
-            pos: tt.Pos,
-            rot: int,
-            edges: tuple[tt.EdgeType, ...],
-            has_strasse: bool,
-            has_fluss: bool,
-    ) -> None:
-        if has_strasse:
-            for edge_idx, edge_type in enumerate(edges):
-                if edge_type == tt.EdgeType.Strasse:
-                    actions.append(
-                        Action(
-                            kind="place_tile",
-                            pos=pos,
-                            rot=rot,
-                            edge_override_edge=edge_idx,
-                            edge_override_from=tt.EdgeType.Strasse,
-                            edge_override_to=tt.EdgeType.Wiese,
-                        )
-                    )
-
-        if has_fluss:
-            for edge_idx, edge_type in enumerate(edges):
-                if edge_type == tt.EdgeType.Fluss:
-                    actions.append(
-                        Action(
-                            kind="place_tile",
-                            pos=pos,
-                            rot=rot,
-                            edge_override_edge=edge_idx,
-                            edge_override_from=tt.EdgeType.Fluss,
-                            edge_override_to=tt.EdgeType.Wiese,
-                        )
-                    )

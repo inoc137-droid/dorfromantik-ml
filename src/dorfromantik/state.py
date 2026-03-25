@@ -9,6 +9,9 @@ from .tiles import ROT_EDGES
 
 @dataclass
 class PlacedTile:
+    """
+    Fundamentalbaustein im State.board = Dict[tt.Pos, PlacedTile]
+    """
     tile_id: int
     rot: int
     edge_overrides: dict[int, tt.EdgeType] = field(default_factory=dict)
@@ -69,6 +72,13 @@ class State:
         return set(self.board.keys())
 
     def effective_edges(placed: PlacedTile) -> tuple[tt.EdgeType, ...]:
+        """
+        Gibt für ein PlacedTile alle Kanten wieder. Die veränderten Kanten werden in placed.edge_overrides
+        gespeichert und überschreiben die in der statischen Definition Tiles (tiles.py) enthaltenen Kanten.
+
+        :placed PlacedTile: Ein bereits gelegtes Tile im state.board - Dictionary
+        :return: tuple[tt.EdgeType, ...]: Ein 6-Tupel, welches ALLE Kanten wiedergibt
+        """
         edges = list(ROT_EDGES[placed.tile_id][placed.rot])
         for edge_idx, edge_type in placed.edge_overrides.items():
             edges[edge_idx] = edge_type

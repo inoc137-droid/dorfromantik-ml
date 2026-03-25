@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1160" viewBox="0 0 1560 1160">
+  <defs>
+    <style>
+      .title { font: 700 26px Arial, sans-serif; fill: #16202a; }
+      .label { font: 14px Arial, sans-serif; fill: #16202a; }
+      .small { font: 12px Arial, sans-serif; fill: #425466; }
+      .box { fill: #eef6ff; stroke: #3c78b5; stroke-width: 2; rx: 12; ry: 12; }
+      .decision { fill: #fff7e8; stroke: #c1841a; stroke-width: 2; }
+      .end { fill: #fdecec; stroke: #c94b4b; stroke-width: 2; rx: 12; ry: 12; }
+      .line { stroke: #556371; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#556371"/>
+    </marker>
+  </defs>
+
+  <rect width="1560" height="1160" fill="#fbfdff"/>
+  <text x="60" y="55" class="title">Spielfluss Dorfromantik-ML</text>
+  <text x="60" y="82" class="small">Abgeleitet aus src/dorfromantik/env.py, rules.py und state.py</text>
+
+  <rect x="640" y="110" width="180" height="56" class="box"/>
+  <text x="730" y="144" text-anchor="middle" class="label">Reset</text>
+
+  <rect x="620" y="210" width="220" height="56" class="box"/>
+  <text x="730" y="244" text-anchor="middle" class="label">Stacks aufbauen</text>
+
+  <rect x="590" y="310" width="280" height="56" class="box"/>
+  <text x="730" y="344" text-anchor="middle" class="label">_advance_after_turn</text>
+
+  <polygon points="730,395 860,455 730,515 600,455" class="decision"/>
+  <text x="730" y="460" text-anchor="middle" class="label">Tile gespeichert?</text>
+
+  <rect x="170" y="430" width="270" height="64" class="box"/>
+  <text x="305" y="468" text-anchor="middle" class="label">Phase: choose_next_tile_source</text>
+
+  <polygon points="1120,395 1335,455 1120,515 905,455" class="decision"/>
+  <text x="1120" y="448" text-anchor="middle" class="label">Weniger als 3 aktive Auftraege</text>
+  <text x="1120" y="468" text-anchor="middle" class="label">und Task-Stack nicht leer?</text>
+
+  <rect x="930" y="560" width="180" height="56" class="box"/>
+  <text x="1020" y="594" text-anchor="middle" class="label">Task-Tile ziehen</text>
+
+  <rect x="1160" y="560" width="180" height="56" class="box"/>
+  <text x="1250" y="594" text-anchor="middle" class="label">Main-Tile ziehen</text>
+
+  <rect x="995" y="665" width="220" height="56" class="box"/>
+  <text x="1105" y="699" text-anchor="middle" class="label">Phase: place_tile</text>
+
+  <polygon points="305,555 465,625 305,695 145,625" class="decision"/>
+  <text x="305" y="630" text-anchor="middle" class="label">Quelle waehlen</text>
+
+  <rect x="40" y="760" width="180" height="56" class="box"/>
+  <text x="130" y="794" text-anchor="middle" class="label">Tile aus Lagerhaus</text>
+  <text x="130" y="812" text-anchor="middle" class="label">nehmen</text>
+
+  <rect x="260" y="760" width="180" height="56" class="box"/>
+  <text x="350" y="794" text-anchor="middle" class="label">Tile aus Kontor</text>
+  <text x="350" y="812" text-anchor="middle" class="label">nehmen</text>
+
+  <polygon points="1105,760 1245,830 1105,900 965,830" class="decision"/>
+  <text x="1105" y="835" text-anchor="middle" class="label">Aktion</text>
+
+  <polygon points="845,935 985,1005 845,1075 705,1005" class="decision"/>
+  <text x="845" y="1010" text-anchor="middle" class="label">Tile-Typ?</text>
+
+  <polygon points="1165,935 1330,1005 1165,1075 1000,1005" class="decision"/>
+  <text x="1165" y="1010" text-anchor="middle" class="label">Platzierung legal?</text>
+
+  <rect x="560" y="930" width="110" height="60" class="end"/>
+  <text x="615" y="965" text-anchor="middle" class="label">Illegal</text>
+  <text x="615" y="983" text-anchor="middle" class="small">Reward -1, Done</text>
+
+  <rect x="640" y="1085" width="190" height="56" class="box"/>
+  <text x="735" y="1119" text-anchor="middle" class="label">In storehouse oder</text>
+  <text x="735" y="1137" text-anchor="middle" class="label">kontor ablegen</text>
+
+  <rect x="855" y="1085" width="150" height="56" class="box"/>
+  <text x="930" y="1119" text-anchor="middle" class="label">Nur in kontor</text>
+  <text x="930" y="1137" text-anchor="middle" class="label">ablegen</text>
+
+  <rect x="1080" y="1085" width="170" height="56" class="box"/>
+  <text x="1165" y="1119" text-anchor="middle" class="label">Tile auf Board</text>
+  <text x="1165" y="1137" text-anchor="middle" class="label">legen</text>
+
+  <rect x="1290" y="1085" width="170" height="56" class="box"/>
+  <text x="1375" y="1119" text-anchor="middle" class="label">Frontier</text>
+  <text x="1375" y="1137" text-anchor="middle" class="label">aktualisieren</text>
+
+  <rect x="1290" y="985" width="200" height="56" class="box"/>
+  <text x="1390" y="1019" text-anchor="middle" class="label">DSU und Feature-</text>
+  <text x="1390" y="1037" text-anchor="middle" class="label">Gebiete aktualisieren</text>
+
+  <polygon points="1390,875 1520,930 1390,985 1260,930" class="decision"/>
+  <text x="1390" y="935" text-anchor="middle" class="label">Auftragsplaettchen?</text>
+
+  <rect x="1260" y="790" width="250" height="56" class="box"/>
+  <text x="1385" y="818" text-anchor="middle" class="label">Passenden Task-Marker ziehen</text>
+  <text x="1385" y="836" text-anchor="middle" class="label">und Auftrag aktivieren</text>
+
+  <rect x="1320" y="700" width="180" height="56" class="box"/>
+  <text x="1410" y="734" text-anchor="middle" class="label">Aktive Auftraege</text>
+  <text x="1410" y="752" text-anchor="middle" class="label">pruefen</text>
+
+  <rect x="1320" y="610" width="200" height="56" class="box"/>
+  <text x="1420" y="638" text-anchor="middle" class="label">Erfuellte oder verlorene</text>
+  <text x="1420" y="656" text-anchor="middle" class="label">Auftraege verbuchen</text>
+
+  <rect x="1335" y="520" width="170" height="56" class="box"/>
+  <text x="1420" y="554" text-anchor="middle" class="label">current_tile = None</text>
+
+  <polygon points="520,250 690,320 520,390 350,320" class="decision"/>
+  <text x="520" y="325" text-anchor="middle" class="label">Legale Folgeaktionen</text>
+  <text x="520" y="343" text-anchor="middle" class="label">vorhanden?</text>
+
+  <rect x="210" y="290" width="120" height="56" class="box"/>
+  <text x="270" y="324" text-anchor="middle" class="label">Spiel laeuft</text>
+  <text x="270" y="342" text-anchor="middle" class="label">weiter</text>
+
+  <rect x="210" y="390" width="120" height="56" class="end"/>
+  <text x="270" y="424" text-anchor="middle" class="label">Done</text>
+
+  <path d="M730 166 L730 210" class="line"/>
+  <path d="M730 266 L730 310" class="line"/>
+  <path d="M730 366 L730 395" class="line"/>
+  <path d="M600 455 L440 455" class="line"/>
+  <text x="520" y="445" class="small">Ja</text>
+  <path d="M860 455 L905 455" class="line"/>
+  <text x="875" y="445" class="small">Nein</text>
+
+  <path d="M1120 515 L1120 560 L1020 560" class="line"/>
+  <text x="1050" y="545" class="small">Ja</text>
+  <path d="M1220 495 L1250 560" class="line"/>
+  <text x="1248" y="535" class="small">Nein</text>
+  <path d="M1020 616 L1020 665" class="line"/>
+  <path d="M1250 616 L1250 640 L1105 640 L1105 665" class="line"/>
+
+  <path d="M305 494 L305 555" class="line"/>
+  <path d="M225 660 L130 760" class="line"/>
+  <text x="170" y="705" class="small">storehouse</text>
+  <path d="M305 695 L350 760" class="line"/>
+  <text x="334" y="723" class="small">kontor</text>
+  <path d="M385 585 L930 585" class="line"/>
+  <text x="633" y="575" class="small">task</text>
+  <path d="M420 625 L1160 625" class="line"/>
+  <text x="720" y="615" class="small">main</text>
+  <path d="M130 816 L130 840 L1030 840 L1030 721" class="line"/>
+  <path d="M350 816 L350 840 L1080 840 L1080 721" class="line"/>
+
+  <path d="M1105 721 L1105 760" class="line"/>
+  <path d="M1040 870 L885 950" class="line"/>
+  <text x="965" y="905" class="small">store_tile</text>
+  <path d="M1165 900 L1165 935" class="line"/>
+  <text x="1178" y="920" class="small">place_tile</text>
+  <path d="M1000 830 L670 960" class="line"/>
+  <text x="835" y="875" class="small">andere Aktion</text>
+
+  <path d="M705 1005 L670 1005" class="line"/>
+  <text x="688" y="995" class="small">Auftrag/Tempel</text>
+  <path d="M790 1050 L760 1085" class="line"/>
+  <text x="742" y="1070" class="small">Landschaft</text>
+  <path d="M900 1050 L930 1085" class="line"/>
+  <text x="902" y="1070" class="small">Sonder</text>
+
+  <path d="M1000 1005 L670 990" class="line"/>
+  <text x="830" y="982" class="small">Nein</text>
+  <path d="M1165 1075 L1165 1085" class="line"/>
+  <text x="1178" y="1072" class="small">Ja</text>
+  <path d="M1250 1113 L1290 1113" class="line"/>
+  <path d="M1390 1085 L1390 1041" class="line"/>
+  <path d="M1390 985 L1390 985" class="line"/>
+  <path d="M1390 985 L1390 985" class="line"/>
+  <path d="M1390 985 L1390 985" class="line"/>
+  <path d="M1390 985 L1390 985" class="line"/>
+  <path d="M1390 985 L1390 875" class="line"/>
+  <path d="M1330 900 L1385 846" class="line"/>
+  <text x="1318" y="880" class="small">Ja</text>
+  <path d="M1390 875 L1410 756" class="line"/>
+  <text x="1425" y="845" class="small">Nein</text>
+  <path d="M1385 790 L1385 756" class="line"/>
+  <path d="M1410 700 L1420 666" class="line"/>
+  <path d="M1420 610 L1420 576" class="line"/>
+
+  <path d="M735 1085 L735 1030 L580 1030 L580 366" class="line"/>
+  <path d="M930 1085 L930 1030 L610 1030 L610 366" class="line"/>
+  <path d="M1420 520 L1420 250 L690 250" class="line"/>
+
+  <path d="M350 320 L330 320" class="line"/>
+  <text x="338" y="308" class="small">Ja</text>
+  <path d="M520 390 L520 418 L330 418" class="line"/>
+  <text x="530" y="410" class="small">Nein</text>
+</svg>
