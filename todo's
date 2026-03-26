@@ -20,10 +20,23 @@ Zum Beispiel:
 Module und Mechaniken werden durch play_with_* mit einbezogen. Wenn False, dann wird ein kompletter "Block" nicht genutzt.
 Überall, wo eine Sonderkarte und deren Mechanik zum Tragen kommt, sollte die Abfrage "if play_with_* :" stehen.
 
+
+######################## Task Marker ########################
 Ziel: Einpflegen der Task-Marker. Durch Fotografie oder simples, selbstgemachte Grafik.
 
-1. Ziel:
-- Punktesystem einführen zum Bepunkten eines fertigen States.
+
+######################## Blüten ########################
+Ziel: alle Mechaniken die Blüten betreffen einpflegen
+  direkte Bepunktung bei Erfüllung eines Auftrags mit Blüten im Gebiet
+  Bepunktung durch Flaggen im Gebiet
+
+
+
+
+######################## Punktesystem ########################
+Ziel: Punktesystem einführen zum Bepunkten eines fertigen States
+  größte Zusammenhangskomponente für Fluss und Strasse bestimmen Basistypen 
+  Auftragsmarker auswerten
 
 - Einfügen der besonderen Items: einmaliges ändern der Auftragsmarker (Reiskuchen, etc,...)
 - Einfügen der Tempel
