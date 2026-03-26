@@ -14,8 +14,8 @@ Ziel: modulare Einbindung von Sonderkarten.
 Zum Beispiel:
   play_with_sackgasse:  bool = True      # globale Variable, die bei Beginn des Spiels per Default auf True sitzt, aber auch individuell geändert werden kann
   play_with_staudamm:   bool = True
-  play_with_daimyo:     bool = True
   ....
+  einmaliges ändern der Auftragsmarker (Reiskuchen, etc,...)
 
 Module und Mechaniken werden durch play_with_* mit einbezogen. Wenn False, dann wird ein kompletter "Block" nicht genutzt.
 Überall, wo eine Sonderkarte und deren Mechanik zum Tragen kommt, sollte die Abfrage "if play_with_* :" stehen.
@@ -31,6 +31,12 @@ Ziel: alle Mechaniken die Blüten betreffen einpflegen
   Bepunktung durch Flaggen im Gebiet
 
 
+######################## Sonderplättchen ########################
+Ziel: modulare Einbindung aller Plättchen und deren Mechaniken
+
+Zum Beispiel:
+  play_with_tile_daimyo:  bool = True
+  ....
 
 
 ######################## Punktesystem ########################
@@ -38,8 +44,13 @@ Ziel: Punktesystem einführen zum Bepunkten eines fertigen States
   größte Zusammenhangskomponente für Fluss und Strasse bestimmen Basistypen 
   Auftragsmarker auswerten
 
-- Einfügen der besonderen Items: einmaliges ändern der Auftragsmarker (Reiskuchen, etc,...)
-- Einfügen der Tempel
-- Einfügen der Brücken
-- Einfügen der Schreine
+
+######################## Tempel ########################
+
+
+######################## Brücken ########################
+
+
+######################## Tore ########################
+
 
