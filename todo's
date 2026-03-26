@@ -1,10 +1,22 @@
-Ziel: modulare Einbindung von Sonderkarten.
-  Zum Beispiel:
-    play_with_sackgasse:  bool = True      # globale Variable, die bei Beginn des Spiels per Default auf True sitzt, aber auch individuell geändert werden kann
-    play_with_staudamm:   bool = True
-    play_with_daimyo:     bool = True
-    ....
+############### Playground zum Placen von Tiles ###############
+Ziel: Sandbox zum Rules-Testen
+  Da durch run_env oder stress_env keine Aufträge erfüllt werden --> manuelles Platzieren der Tiles mit visueller Darstellung
 
-  Module und Mechaniken werden durch play_with_* mit einbezogen. Wenn False, dann wird ein kompletter "Block" nicht genutzt.
-  Überall, wo eine Sonderkarte und deren Mechanik zum Tragen kommt, sollte die Abfrage "if play_with_* :" stehen.
+Struktur: 
+  Ordner: Sandbox
+  Datei: playground.py
+  visuelle Darstellung durch render_board, interaktive oder per Terminal basierte Eingabe von Tiles. Auftragslogik muss bestehen, Main_/Task_Stack-Logik muss überschrieben werden.
+
+
+######################## Sonderkarten ########################
+Ziel: modulare Einbindung von Sonderkarten.
+
+Zum Beispiel:
+  play_with_sackgasse:  bool = True      # globale Variable, die bei Beginn des Spiels per Default auf True sitzt, aber auch individuell geändert werden kann
+  play_with_staudamm:   bool = True
+  play_with_daimyo:     bool = True
+  ....
+
+Module und Mechaniken werden durch play_with_* mit einbezogen. Wenn False, dann wird ein kompletter "Block" nicht genutzt.
+Überall, wo eine Sonderkarte und deren Mechanik zum Tragen kommt, sollte die Abfrage "if play_with_* :" stehen.
 
