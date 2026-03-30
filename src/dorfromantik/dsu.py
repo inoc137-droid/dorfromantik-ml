@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, Set, Tuple, List
+from . import tile_types as tt
 
 Pos = Tuple[int, int]
 Side = int
@@ -13,6 +14,8 @@ class DSU:
     members: Dict[Pos, Set[Pos]] = field(default_factory=dict)  # root -> set(Pos)
     open_edges: Dict[Pos, Set[HalfEdge]] = field(default_factory=dict)  # root -> set(HalfEdge)
     closed: Dict[Pos, bool] = field(default_factory=dict)  # root -> abgeschlossen?
+    # root -> {flag_type: set of flag_pos}
+    flag_positions: Dict[Pos, Dict[tt.EdgeType, Set[Pos]]] = field(default_factory=dict)
     max_size: int = 0
 
     def add(self, x: Pos) -> None:
@@ -23,6 +26,7 @@ class DSU:
         self.members[x] = {x}
         self.open_edges[x] = set()
         self.closed[x] = False
+        self.flag_positions[x] = {}
         if self.max_size < 1:
             self.max_size = 1
 
@@ -59,6 +63,12 @@ class DSU:
         self.closed[ra] = self.closed[ra] and self.closed[rb]
         del self.closed[rb]
 
+        for flag_type, pos_set in self.flag_positions[rb].items():
+            if flag_type not in self.flag_positions[ra]:
+                self.flag_positions[ra][flag_type] = set()
+            self.flag_positions[ra][flag_type] |= pos_set
+        del self.flag_positions[rb]
+
         if self.size[ra] > self.max_size:
             self.max_size = self.size[ra]
 
@@ -86,6 +96,12 @@ class DSU:
         self.open_edges[r].discard((a, a_side))
         self.open_edges[r].discard((b, b_side))
         self.closed[r] = len(self.open_edges[r]) == 0
+
+    def add_flag(self, x: Pos, flag_type: tt.EdgeType) -> None:
+        rx = self.find(x)
+        if flag_type not in self.flag_positions[rx]:
+            self.flag_positions[rx][flag_type] = set()
+        self.flag_positions[rx][flag_type].add(x)
 
     def is_closed(self, x: Pos) -> bool:
         """ (x) -> 0/1, ob zu gegebenem Tile an Stelle x, der Root offen oder abgeschlossen ist (also das Ganze Gebiet) """

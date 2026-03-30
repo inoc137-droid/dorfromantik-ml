@@ -36,7 +36,7 @@ def is_legal_placement(
     """
     edges = list(ROT_EDGES[tile_id][rot])
 
-    # zunächst overrides anwenden
+    # zunächst Overrides anwenden
     if edge_overrides:
         for idx, new_type in edge_overrides.items():
             edges[idx] = new_type

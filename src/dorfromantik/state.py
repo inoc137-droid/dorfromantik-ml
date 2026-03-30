@@ -50,14 +50,24 @@ class State:
     storehouse_tile: Optional[int] = None
     kontor_tile: Optional[int] = None
 
-    sackgasse_available: bool = True
-    staudamm_available: bool = True
+    sackgasse_available: bool = False
+    staudamm_available: bool = False
 
     def is_empty(self) -> bool:
         return len(self.board) == 0
 
-    def place_tile(self, pos: tt.Pos, tile_id: int, rot: int):
-        self.board[pos] = PlacedTile(tile_id, rot)
+    def place_tile(
+            self,
+            pos: tt.Pos,
+            tile_id: int,
+            rot: int,
+            edge_overrides: Dict[int, tt.EdgeType] | None = None
+    ):
+        self.board[pos] = PlacedTile(
+            tile_id=tile_id,
+            rot=rot,
+            edge_overrides=dict(edge_overrides or {})
+            )
 
         # pos ist belegt -> entfernen
         self.frontier.discard(pos)
@@ -71,6 +81,7 @@ class State:
     def occupied_positions(self) -> Set[tt.Pos]:
         return set(self.board.keys())
 
+    @staticmethod
     def effective_edges(placed: PlacedTile) -> tuple[tt.EdgeType, ...]:
         """
         Gibt für ein PlacedTile alle Kanten wieder. Die veränderten Kanten werden in placed.edge_overrides

@@ -44,6 +44,8 @@ Ziel: Punktesystem einführen zum Bepunkten eines fertigen States
   größte Zusammenhangskomponente für Fluss und Strasse bestimmen Basistypen 
   Auftragsmarker auswerten
 
+Wertung von Fahnen ändern: DSU führen auch Status über: flags: Dict[Pos, Dict[tt.EdgeType, int]], daher ist direkte Auswertung möglich --> DSU anpassen
+
 
 ######################## Tempel ########################
 

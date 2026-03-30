@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 # from dorfromantik.render_ascii import render_ascii
 from dorfromantik.env import Env
 import dorfromantik.tile_types as tt
-from dorfromantik.tiles import ROT_EDGES
 from tile_digitalisierung.render_board import render_and_show
 from sim.debug_checks import check_dsu_consistency, debug_print_dsus
+from dorfromantik.scoring import score_rules
 
 # Falls dein DSU-Update in env.step() noch nicht drin ist:
 # from dorfromantik.dsu_update import update_all_dsus_after_place
@@ -71,6 +71,9 @@ def main():
             print("  [ERROR] AssertionError in step():", e)
             raise
 
+        # Berechnung nach Score-Sheet
+        score = score_rules(s)
+
         print("  action_kind :", info.last_action.kind)
 
         if info.last_action.choice is not None:
@@ -95,6 +98,7 @@ def main():
         print("  next_tile   :", info.next_tile)
         print("  next_phase  :", info.next_phase)
         print("  next_actions:", info.n_legal_next)
+        print("  score_rules :", score)
 
         # -------------------------------
         # Board visualisieren

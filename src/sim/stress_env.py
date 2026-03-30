@@ -7,6 +7,8 @@ import time
 
 from dorfromantik.env import Env
 from sim.debug_checks import check_dsu_consistency
+from dorfromantik.scoring import score_rules
+from dorfromantik import tile_types as tt
 
 
 def run_one_episode(seed: int):
@@ -51,21 +53,19 @@ def run_one_episode(seed: int):
     road_max = 0
     river_max = 0
 
-    if hasattr(s, "feature_dsu"):
-        feature_dsu = s.feature_dsu
-        if hasattr(feature_dsu, "get"):
-            road_dsu = feature_dsu.get(type(next(iter(feature_dsu.keys()))) if False else None)
-        try:
-            import dorfromantik.tile_types as tt
-            road_dsu = feature_dsu.get(tt.EdgeType.Strasse)
-            river_dsu = feature_dsu.get(tt.EdgeType.Fluss)
+    feature_dsu = getattr(s, "feature_dsu", None)
 
-            if road_dsu is not None:
-                road_max = road_dsu.max_size
-            if river_dsu is not None:
-                river_max = river_dsu.max_size
-        except Exception:
-            pass
+    if feature_dsu is not None:
+        road_dsu = feature_dsu.get(tt.EdgeType.Strasse)
+        river_dsu = feature_dsu.get(tt.EdgeType.Fluss)
+
+        if road_dsu:
+            road_max = road_dsu.max_size
+        if river_dsu:
+            river_max = river_dsu.max_size
+
+    # Berechnung Punkte nach Score-Sheet
+    rules_score = score_rules(s)
 
     return {
         "seed": seed,
@@ -73,6 +73,7 @@ def run_one_episode(seed: int):
         "end_reason": end_reason,
         "road_max": road_max,
         "river_max": river_max,
+        "rules_score": rules_score,
         "error": error,
     }
 
@@ -81,6 +82,7 @@ def summarize(results: list[dict]):
     steps = [r["steps"] for r in results]
     road_maxes = [r["road_max"] for r in results]
     river_maxes = [r["river_max"] for r in results]
+    rules_scores = [r["rules_score"] for r in results]
 
     end_reason_counts = {}
     for r in results:
@@ -106,6 +108,10 @@ def summarize(results: list[dict]):
         print("river_max_mean       :", round(statistics.mean(river_maxes), 3))
         print("river_max_best       :", max(river_maxes))
 
+    if rules_scores:
+        print("rules_score_mean     :", round(statistics.mean(rules_scores), 3))
+        print("rules_score_best     :", max(rules_scores))
+
     print("end_reasons          :", end_reason_counts)
 
     if errors:
@@ -119,9 +125,9 @@ def summarize(results: list[dict]):
 
 
 def main():
-    n_runs = 500
+    n_runs = 2000
     start_seed = 0
-    progress_every = 500
+    progress_every = 200
 
     results = []
 

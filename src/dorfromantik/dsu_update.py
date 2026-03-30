@@ -4,8 +4,9 @@ from typing import Dict
 
 from . import tile_types as tt
 from dorfromantik.dsu import DSU
-from dorfromantik.state import State
+from dorfromantik.state import State, PlacedTile
 from dorfromantik.tiles import ROT_EDGES
+from .tiles import TILES
 
 TRACKED_TYPES = (
     tt.EdgeType.Sakura,
@@ -38,9 +39,9 @@ def update_neighbor_dsus_after_place(state: State, pos: tt.Pos) -> None:
 
         opp = tt.opposite_edge(side)
         nplaced = state.board[npos]
-        nedges = ROT_EDGES[nplaced.tile_id][nplaced.rot]
-        neighbor_type = nedges[opp]
+        nedges = State.effective_edges(nplaced)
 
+        neighbor_type = nedges[opp]
         if neighbor_type in TRACKED_TYPES:
             update_one_dsu_after_place(state, npos, neighbor_type)
 
@@ -60,8 +61,8 @@ def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> No
     d: Dict[tt.EdgeType, DSU] = state.feature_dsu  # type: ignore[attr-defined]
     dsu = d[et]
 
-    placed = state.board[pos]
-    edges = ROT_EDGES[placed.tile_id][placed.rot]
+    placed: PlacedTile = state.board[pos]
+    edges = State.effective_edges(placed)
 
     if et not in edges:
         return
@@ -86,7 +87,7 @@ def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> No
             continue
 
         nplaced = state.board[npos]
-        nedges = ROT_EDGES[nplaced.tile_id][nplaced.rot]
+        nedges = State.effective_edges(nplaced)
 
         # Gleicher Typ -> verbinden und Innenkante schließen
         if nedges[opp] == et:
@@ -102,5 +103,10 @@ def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> No
 
         # Sakura/Reis/Dorf:
         # Nachbar vorhanden => Kante ist nicht offen, also nichts mehr tun.
+
+    # Fahne des neu gelegten Tiles in die passende DSU eintragen
+    tile_flag_type = TILES[placed.tile_id].flag_type
+    if tile_flag_type == et:
+        dsu.add_flag(pos, tile_flag_type)
 
     dsu.refresh_closed(pos)

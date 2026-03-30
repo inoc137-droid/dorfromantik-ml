@@ -226,11 +226,38 @@ class Env:
             pos = action.pos
             rot = action.rot
 
-            if not is_legal_placement(s, pos, tile_id, rot):
+            edge_overrides: dict[int, tt.EdgeType] | None = None
+            if (
+                action.edge_override_to is not None
+                and action.edge_override_from is not None
+            ):
+                edge_overrides = {
+                    action.edge_override_edge: action.edge_override_to
+                }
+
+            if not is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
                 return self._illegal_action_result(s, action)
 
             # Tile auf das Board legen
-            s.place_tile(pos, tile_id, rot)
+            s.place_tile(pos, tile_id, rot, edge_overrides=edge_overrides)
+
+            # Sonderaktionen verbrauchen
+            sackgasse_used: bool = False
+            staudamm_used: bool = False
+
+            if (
+                    action.edge_override_from == tt.EdgeType.Strasse
+                    and action.edge_override_to == tt.EdgeType.Wiese
+            ):
+                s.sackgasse_available = False
+                sackgasse_used = True
+
+            if (
+                    action.edge_override_from == tt.EdgeType.Fluss
+                    and action.edge_override_to == tt.EdgeType.Wiese
+            ):
+                s.staudamm_available = False
+                staudamm_used = True
 
             # DSU / Features aktualisieren
             update_all_dsus_after_place(s, pos)
@@ -266,6 +293,9 @@ class Env:
                 placed_pos=pos,
                 placed_rot=rot,
                 chosen_source="main",
+                sackgasse_used=sackgasse_used,
+                staudamm_used=staudamm_used,
+                altered_edge=action.edge_override_edge,
                 newly_completed_tasks=newly_completed,
                 newly_failed_tasks=newly_failed,
                 next_tile=s.current_tile,
