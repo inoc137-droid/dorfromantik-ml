@@ -1,0 +1,197 @@
+Vorher: 26 runs_per_second
+
+Nach Stufe 1:
+stress_env.py: Konsistenzcheck abschaltbar machen oder ganz raus im Benchmarkpfad.
+stress_env.py: score_rules optional machen.
+rules.legal_actions(): sorted(frontier) entfernen.
+update_all_dsus_after_place(): nur relevante Typen updaten.
+
+===== STRESS TEST SUMMARY =====
+runs                 : 2000
+successful_runs      : 2000
+error_runs           : 0
+steps_mean           : 48.169
+steps_min            : 48
+steps_max            : 51
+road_max_mean        : 2.159
+road_max_best        : 6
+river_max_mean       : 2.159
+river_max_best       : 6
+end_reasons          : {'bag_empty': 2000}
+
+===== PERFORMANCE =====
+total_runtime_sec     : 64.074
+runs_per_second       : 31.21
+
+Process finished with exit code 0
+
+############################################################
+        Vergleich env_fast (ohne StepInfo) und env
+############################################################
+
+####################
+Env + cProfile Timer
+
+===== PERFORMANCE =====
+total_runtime_sec     : 157.575
+runs_per_second       : 12.69
+         478644476 function calls (478329069 primitive calls) in 140.041 seconds
+
+   Ordered by: cumulative time
+   List reduced from 89 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.047    0.047  157.579  157.579 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\sim\stress_env.py:138(main)
+     2000    0.294    0.000  157.527    0.079 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\sim\stress_env.py:14(run_one_episode)
+   192728    8.565    0.000  150.700    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:314(legal_actions)
+   190728   10.258    0.000  123.168    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\rules.py:72(legal_actions)
+ 44020954   65.219    0.000  111.756    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\rules.py:20(is_legal_placement)
+    96364    0.197    0.000   81.477    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:92(step)
+    96364    0.465    0.000   81.280    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:154(_step_place_tile)
+ 65295373   21.785    0.000   27.023    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\state.py:84(effective_edges)
+190730684   15.597    0.000   15.597    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\tile_types.py:65(neighbor)
+ 65324105    5.243    0.000    5.243    0.000 {method 'items' of 'dict' objects}
+ 65332204    4.559    0.000    4.559    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\tile_types.py:69(opposite_edge)
+   293505    1.241    0.000    3.166    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:53(update_one_dsu_after_place)
+ 35983105    3.041    0.000    3.041    0.000 {method 'append' of 'list' objects}
+    94678    0.169    0.000    2.364    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:24(update_all_dsus_after_place)
+    94678    0.228    0.000    1.415    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:38(update_neighbor_dsus_after_place)
+   956011    0.348    0.000    0.582    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:77(refresh_closed)
+2742157/2426752    0.477    0.000    0.477    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:33(find)
+    94678    0.305    0.000    0.461    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\state.py:59(place_tile)
+    94678    0.144    0.000    0.439    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:435(update_active_tasks)
+     2000    0.006    0.000    0.351    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:514(reset)
+   425014    0.172    0.000    0.294    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:83(add_open_edge)
+   278027    0.178    0.000    0.262    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:454(_task_status)
+    66447    0.058    0.000    0.235    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:90(close_between)
+   410364    0.156    0.000    0.232    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:242(_randbelow_with_getrandbits)
+    98364    0.063    0.000    0.229    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:394(_advance_after_turn)
+     2000    0.035    0.000    0.207    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:31(_build_stacks)
+    22000    0.057    0.000    0.200    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:350(shuffle)
+   426399    0.190    0.000    0.190    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:21(add)
+    96364    0.063    0.000    0.167    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:291(randrange)
+    66447    0.097    0.000    0.152    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:41(union)
+   890078    0.132    0.000    0.132    0.000 {method 'discard' of 'set' objects}
+   873959    0.127    0.000    0.127    0.000 {method 'add' of 'set' objects}
+  1447918    0.113    0.000    0.113    0.000 {built-in method builtins.len}
+    98364    0.045    0.000    0.112    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:421(_should_offer_task_tile)
+     2000    0.031    0.000    0.102    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:66(_build_task_marker_stacks)
+    98364    0.033    0.000    0.059    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:418(_number_of_tasks_active)
+    92000    0.033    0.000    0.050    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:487(_draw_main_tile)
+   626207    0.042    0.000    0.042    0.000 {method 'getrandbits' of '_random.Random' objects}
+     6000    0.010    0.000    0.042    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:135(seed)
+   410364    0.034    0.000    0.034    0.000 {method 'bit_length' of 'int' objects}
+
+#######################
+Env ohne cProfile Timer
+
+===== STRESS TEST SUMMARY =====
+runs                 : 2000
+successful_runs      : 2000
+error_runs           : 0
+steps_mean           : 48.182
+steps_min            : 48
+steps_max            : 51
+road_max_mean        : 2.158
+road_max_best        : 5
+river_max_mean       : 2.16
+river_max_best       : 6
+end_reasons          : {'bag_empty': 2000}
+
+===== PERFORMANCE =====
+total_runtime_sec     : 62.479
+runs_per_second       : 32.01
+
+
+###########################
+env_fast mit cProfile Timer
+
+===== PERFORMANCE =====
+total_runtime_sec     : 82.204
+runs_per_second       : 24.33
+         247918153 function calls (247602746 primitive calls) in 73.368 seconds
+
+   Ordered by: cumulative time
+   List reduced from 89 to 40 due to restriction <40>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.039    0.039   82.208   82.208 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\sim\stress_env.py:138(main)
+     2000    0.284    0.000   82.165    0.041 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\sim\stress_env.py:14(run_one_episode)
+    98364    4.343    0.000   75.874    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:476(legal_actions)
+    96364    5.304    0.000   61.966    0.001 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\rules.py:72(legal_actions)
+ 22063816   32.898    0.000   56.234    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\rules.py:20(is_legal_placement)
+ 33091067   11.229    0.000   13.814    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\state.py:84(effective_edges)
+ 96702048    7.937    0.000    7.937    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\tile_types.py:65(neighbor)
+    96364    0.039    0.000    5.452    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:101(step_fast)
+    96364    0.258    0.000    5.413    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:361(_step_place_tile_fast)
+   293505    1.210    0.000    3.114    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:53(update_one_dsu_after_place)
+ 33119799    2.589    0.000    2.589    0.000 {method 'items' of 'dict' objects}
+    94678    0.160    0.000    2.304    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:24(update_all_dsus_after_place)
+ 33127898    2.227    0.000    2.227    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\tile_types.py:69(opposite_edge)
+ 18236930    1.582    0.000    1.582    0.000 {method 'append' of 'list' objects}
+    94678    0.224    0.000    1.406    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu_update.py:38(update_neighbor_dsus_after_place)
+   956011    0.344    0.000    0.577    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:77(refresh_closed)
+2742157/2426752    0.473    0.000    0.473    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:33(find)
+    94678    0.295    0.000    0.448    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\state.py:59(place_tile)
+    94678    0.136    0.000    0.423    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:597(update_active_tasks)
+     2000    0.006    0.000    0.349    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:676(reset)
+   425014    0.171    0.000    0.293    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:83(add_open_edge)
+   278027    0.171    0.000    0.254    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:616(_task_status)
+   410364    0.153    0.000    0.229    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:242(_randbelow_with_getrandbits)
+    66447    0.056    0.000    0.229    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:90(close_between)
+    98364    0.060    0.000    0.222    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:556(_advance_after_turn)
+     2000    0.034    0.000    0.206    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:31(_build_stacks)
+    22000    0.057    0.000    0.200    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:350(shuffle)
+   426399    0.182    0.000    0.182    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:21(add)
+    96364    0.060    0.000    0.160    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:291(randrange)
+    66447    0.094    0.000    0.149    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\dsu.py:41(union)
+   890078    0.130    0.000    0.130    0.000 {method 'discard' of 'set' objects}
+   873959    0.125    0.000    0.125    0.000 {method 'add' of 'set' objects}
+    98364    0.045    0.000    0.110    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:583(_should_offer_task_tile)
+     2000    0.030    0.000    0.101    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:66(_build_task_marker_stacks)
+  1255190    0.092    0.000    0.092    0.000 {built-in method builtins.len}
+    98364    0.032    0.000    0.057    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:580(_number_of_tasks_active)
+    92000    0.032    0.000    0.048    0.000 C:\Users\Kevin\PycharmProjects\dorfromantik-ml\src\dorfromantik\env.py:649(_draw_main_tile)
+   626207    0.042    0.000    0.042    0.000 {method 'getrandbits' of '_random.Random' objects}
+     6000    0.010    0.000    0.041    0.000 C:\Users\Kevin\AppData\Local\Programs\Python\Python312\Lib\random.py:135(seed)
+   410364    0.034    0.000    0.034    0.000 {method 'bit_length' of 'int' objects}
+
+############################
+Env_fast ohne cProfile Timer
+
+===== STRESS TEST SUMMARY =====
+runs                 : 2000
+successful_runs      : 2000
+error_runs           : 0
+steps_mean           : 48.182
+steps_min            : 48
+steps_max            : 51
+road_max_mean        : 2.158
+road_max_best        : 5
+river_max_mean       : 2.16
+river_max_best       : 6
+end_reasons          : {'no_legal_actions': 2000}
+
+===== PERFORMANCE =====
+total_runtime_sec     : 32.743
+runs_per_second       : 61.08
+
+Nach Entfernung override_edges Funktion und jetziger Speicherung der edges von PlacedTile
+
+===== STRESS TEST SUMMARY =====
+runs                 : 2000
+successful_runs      : 2000
+error_runs           : 0
+steps_mean           : 48.182
+steps_min            : 48
+steps_max            : 51
+road_max_mean        : 2.158
+road_max_best        : 5
+river_max_mean       : 2.16
+river_max_best       : 6
+end_reasons          : {'no_legal_actions': 2000}
+
+===== PERFORMANCE =====
+total_runtime_sec     : 24.348
+runs_per_second       : 82.14
+

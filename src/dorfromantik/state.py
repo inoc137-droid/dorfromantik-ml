@@ -14,7 +14,7 @@ class PlacedTile:
     """
     tile_id: int
     rot: int
-    edge_overrides: dict[int, tt.EdgeType] = field(default_factory=dict)
+    edges: tuple[tt.EdgeType, ...]
 
 
 @dataclass
@@ -42,7 +42,7 @@ class State:
     temple_tiles: List[int] = field(default_factory=list)
     temple_hidden_stack: List[int] = field(default_factory=list)
 
-    task_marker_stack: list[tasks.TaskMarker] = field(default_factory=list)
+    task_marker_stacks: dict[tt.TaskType, list[tasks.TaskMarker]] = field(default_factory=dict)
     completed_task_markers: list[tasks.TaskMarker] = field(default_factory=list)
     active_tasks: list[tasks.ActiveTask] = field(default_factory=list)
     failed_task_markers: list[tasks.TaskMarker] = field(default_factory=list)
@@ -63,10 +63,15 @@ class State:
             rot: int,
             edge_overrides: Dict[int, tt.EdgeType] | None = None
     ):
+        edges = list(ROT_EDGES[tile_id][rot])
+        if edge_overrides:
+            for edge_idx, edge_type in edge_overrides.items():
+                edges[edge_idx] = edge_type
+
         self.board[pos] = PlacedTile(
             tile_id=tile_id,
             rot=rot,
-            edge_overrides=dict(edge_overrides or {})
+            edges=tuple(edges),
             )
 
         # pos ist belegt -> entfernen
@@ -80,17 +85,3 @@ class State:
 
     def occupied_positions(self) -> Set[tt.Pos]:
         return set(self.board.keys())
-
-    @staticmethod
-    def effective_edges(placed: PlacedTile) -> tuple[tt.EdgeType, ...]:
-        """
-        Gibt für ein PlacedTile alle Kanten wieder. Die veränderten Kanten werden in placed.edge_overrides
-        gespeichert und überschreiben die in der statischen Definition Tiles (tiles.py) enthaltenen Kanten.
-
-        :placed PlacedTile: Ein bereits gelegtes Tile im state.board - Dictionary
-        :return: tuple[tt.EdgeType, ...]: Ein 6-Tupel, welches ALLE Kanten wiedergibt
-        """
-        edges = list(ROT_EDGES[placed.tile_id][placed.rot])
-        for edge_idx, edge_type in placed.edge_overrides.items():
-            edges[edge_idx] = edge_type
-        return tuple(edges)

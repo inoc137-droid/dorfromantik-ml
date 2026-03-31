@@ -18,6 +18,7 @@ TRACKED_TYPES = (
     tt.EdgeType.Vulkan,
     tt.EdgeType.Wolken
 )
+TRACKED_TYPES_SET = frozenset(TRACKED_TYPES)
 
 
 def update_all_dsus_after_place(state: State, pos: tt.Pos) -> None:
@@ -27,8 +28,11 @@ def update_all_dsus_after_place(state: State, pos: tt.Pos) -> None:
         - DSU Komponenten
         - offene Kanten (open_edges) pro Komponente
     """
-    for et in TRACKED_TYPES:
-        update_one_dsu_after_place(state, pos, et)
+    placed = state.board[pos]
+    edges = placed.edges
+
+    for et in TRACKED_TYPES_SET.intersection(edges):
+        update_one_dsu_after_place(state, pos, et, placed=placed, edges=edges)
 
 
 def update_neighbor_dsus_after_place(state: State, pos: tt.Pos) -> None:
@@ -39,14 +43,20 @@ def update_neighbor_dsus_after_place(state: State, pos: tt.Pos) -> None:
 
         opp = tt.opposite_edge(side)
         nplaced = state.board[npos]
-        nedges = State.effective_edges(nplaced)
+        nedges = nplaced.edges
 
         neighbor_type = nedges[opp]
-        if neighbor_type in TRACKED_TYPES:
-            update_one_dsu_after_place(state, npos, neighbor_type)
+        if neighbor_type in TRACKED_TYPES_SET:
+            update_one_dsu_after_place(state, npos, neighbor_type, placed=nplaced, edges=nedges)
 
 
-def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> None:
+def update_one_dsu_after_place(
+        state: State,
+        pos: tt.Pos,
+        et: tt.EdgeType,
+        placed: PlacedTile | None = None,
+        edges: tuple[tt.EdgeType, ...] | None = None,
+) -> None:
     """
     Aktualisiert genau eine DSU für einen Typ et an Position pos.
 
@@ -61,8 +71,10 @@ def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> No
     d: Dict[tt.EdgeType, DSU] = state.feature_dsu  # type: ignore[attr-defined]
     dsu = d[et]
 
-    placed: PlacedTile = state.board[pos]
-    edges = State.effective_edges(placed)
+    if placed is None:
+        placed = state.board[pos]
+    if edges is None:
+        edges = placed.edges
 
     if et not in edges:
         return
@@ -87,7 +99,7 @@ def update_one_dsu_after_place(state: State, pos: tt.Pos, et: tt.EdgeType) -> No
             continue
 
         nplaced = state.board[npos]
-        nedges = State.effective_edges(nplaced)
+        nedges = nplaced.edges
 
         # Gleicher Typ -> verbinden und Innenkante schließen
         if nedges[opp] == et:

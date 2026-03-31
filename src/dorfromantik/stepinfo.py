@@ -4,7 +4,7 @@ from dorfromantik.action import Action
 import dorfromantik.tile_types as tt
 
 
-@dataclass
+@dataclass(slots=True)
 class StepInfo:
     last_action: Action
 

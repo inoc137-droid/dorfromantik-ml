@@ -63,8 +63,9 @@ class Env:
 
         return main_stack, task_stack, temple_tiles, temple_hidden_stack
 
-    def _build_task_marker_stack(self) -> list[tasks.TaskMarker]:
-        markers = []
+    def _build_task_marker_stacks(self) -> dict[tt.TaskType, list[tasks.TaskMarker]]:
+        stacks: dict[tt.TaskType, list[tasks.TaskMarker]] = {}
+
         for task_type in (
             tt.TaskType.Sakura,
             tt.TaskType.Reis,
@@ -73,15 +74,14 @@ class Env:
             tt.TaskType.Fluss,
             tt.TaskType.Rundum,
         ):
-            for target in (4, 4, 5, 5, 6, 6):
-                markers.append(tasks.TaskMarker(
-                    task_type=task_type,
-                    target=target,
-                    points=target
-                ))
+            markers = [
+                tasks.TaskMarker(task_type=task_type, target=target, points=target)
+                for target in (4, 4, 5, 5, 6, 6)
+            ]
+            self.rng.shuffle(markers)
+            stacks[task_type] = markers
 
-        self.rng.shuffle(markers)
-        return markers
+        return stacks
 
 #########################################
 # Zug Logik: Phase > action.kind > choice
@@ -97,6 +97,15 @@ class Env:
             return self._step_place_tile(s, action)
 
         return self._illegal_action_result(s, action)
+
+    def step_fast(self, s: State, action: Action):
+        if s.phase == "choose_next_tile_source":
+            return self._step_choose_next_tile_source_fast(s, action)
+
+        if s.phase == "place_tile":
+            return self._step_place_tile_fast(s, action)
+
+        return s, True
 
     def _step_choose_next_tile_source(self, s: State, action: Action):
         if action.kind != "choose_source":
@@ -150,6 +159,46 @@ class Env:
             n_legal_next=len(next_actions)
         )
         return s, 0, done, info
+
+    def _step_choose_next_tile_source_fast(self, s: State, action: Action):
+        if action.kind != "choose_source":
+            return s, True
+
+        if action.choice == "storehouse":
+            if s.storehouse_tile is None:
+                return s, True
+            s.current_tile = s.storehouse_tile
+            s.storehouse_tile = None
+            s.phase = "place_tile"
+
+        elif action.choice == "kontor":
+            if s.kontor_tile is None:
+                return s, True
+            s.current_tile = s.kontor_tile
+            s.kontor_tile = None
+            s.phase = "place_tile"
+
+        elif action.choice == "main":
+            self._draw_main_tile(s)
+
+        elif action.choice == "task":
+            if not self._should_offer_task_tile(s):
+                return s, True
+            self._draw_task_tile(s)
+
+        else:
+            return s, True
+
+        # done hier nur, wenn nichts mehr aktiv/ziehbar ist
+        done = (
+                s.phase == "place_tile"
+                and s.current_tile is None
+                and s.storehouse_tile is None
+                and s.kontor_tile is None
+                and not s.main_stack
+                and not s.task_stack
+        )
+        return s, done
 
     def _step_place_tile(self, s: State, action: Action):
         if s.current_tile is None:
@@ -309,6 +358,119 @@ class Env:
         # -------------------------------------------------
         return self._illegal_action_result(s, action)
 
+    def _step_place_tile_fast(self, s: State, action: Action):
+        if s.current_tile is None:
+            return s, True
+
+        tile_id = s.current_tile
+        tile = TILES[tile_id]
+
+        if action.kind == "store_tile":
+            if action.choice is None:
+                return s, True
+
+            if tile.tile_group == tt.TileGroup.Landschaft:
+                if action.choice == "storehouse":
+                    if s.storehouse_tile is not None:
+                        return s, True
+                    s.storehouse_tile = tile_id
+
+                elif action.choice == "kontor":
+                    if s.kontor_tile is not None:
+                        return s, True
+                    s.kontor_tile = tile_id
+
+                else:
+                    return s, True
+
+            elif tile.tile_group == tt.TileGroup.Sonder:
+                if action.choice != "kontor":
+                    return s, True
+                if s.kontor_tile is not None:
+                    return s, True
+                s.kontor_tile = tile_id
+
+            else:
+                return s, True
+
+            s.current_tile = None
+            self._advance_after_turn(s)
+
+            done = (
+                    s.phase == "place_tile"
+                    and s.current_tile is None
+                    and s.storehouse_tile is None
+                    and s.kontor_tile is None
+                    and not s.main_stack
+                    and not s.task_stack
+            )
+            return s, done
+
+        if action.kind == "place_tile":
+            if action.pos is None or action.rot is None:
+                return s, True
+
+            pos = action.pos
+            rot = action.rot
+
+            edge_overrides: dict[int, tt.EdgeType] | None = None
+            if (
+                    action.edge_override_to is not None
+                    and action.edge_override_from is not None
+                    and action.edge_override_edge is not None
+            ):
+                edge_overrides = {
+                    action.edge_override_edge: action.edge_override_to
+                }
+
+            if not is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
+                return s, True
+
+            s.place_tile(pos, tile_id, rot, edge_overrides=edge_overrides)
+
+            if (
+                    action.edge_override_from == tt.EdgeType.Strasse
+                    and action.edge_override_to == tt.EdgeType.Wiese
+            ):
+                s.sackgasse_available = False
+
+            if (
+                    action.edge_override_from == tt.EdgeType.Fluss
+                    and action.edge_override_to == tt.EdgeType.Wiese
+            ):
+                s.staudamm_available = False
+
+            update_all_dsus_after_place(s, pos)
+            update_neighbor_dsus_after_place(s, pos)
+
+            if tile.tile_group == tt.TileGroup.Auftrag and tile.task_type is not None:
+                marker = self._draw_task_marker(s, tile.task_type)
+                if marker is not None:
+                    s.active_tasks.append(
+                        tasks.ActiveTask(
+                            pos=pos,
+                            task_type=tile.task_type,
+                            marker=marker,
+                        )
+                    )
+
+            self.update_active_tasks(s)
+
+            s.current_tile = None
+            self._advance_after_turn(s)
+
+            done = (
+                    s.phase == "place_tile"
+                    and s.current_tile is None
+                    and s.storehouse_tile is None
+                    and s.kontor_tile is None
+                    and not s.main_stack
+                    and not s.task_stack
+            )
+            return s, done
+
+        return s, True
+
 # Legale Aktionen
 
     def legal_actions(self, s: State) -> list[Action]:
@@ -429,10 +591,8 @@ class Env:
         s.phase = "place_tile"
 
     def _draw_task_marker(self, s: State, task_type: tt.TaskType) -> tasks.TaskMarker | None:
-        for i, marker in enumerate(s.task_marker_stack):
-            if marker.task_type == task_type:
-                return s.task_marker_stack.pop(i)
-        return None
+        stack = s.task_marker_stacks.get(task_type, None)
+        return stack.pop() if stack else None
 
     def update_active_tasks(self, s: State):
         still_active = []
@@ -493,17 +653,17 @@ class Env:
             s.current_tile = None
         s.phase = "place_tile"
 
-    def _result_after_state_change(self, s: State):
-        actions = self.legal_actions(s)
-        done = len(actions) == 0
-        info = StepInfo(
-            placed_tile=-1,
-            placed_pos=(0, 0),
-            placed_rot=0,
-            next_tile=s.current_tile,
-            n_legal_next=len(actions),
-        )
-        return s, 0, done, info
+    # def _result_after_state_change(self, s: State):
+    #     actions = self.legal_actions(s)
+    #     done = len(actions) == 0
+    #     info = StepInfo(
+    #         placed_tile=-1,
+    #         placed_pos=(0, 0),
+    #         placed_rot=0,
+    #         next_tile=s.current_tile,
+    #         n_legal_next=len(actions),
+    #     )
+    #     return s, 0, done, info
 
     def _illegal_action_result(self, s: State, action: Action):
         return s, -1, True, StepInfo(
@@ -532,7 +692,7 @@ class Env:
             s.temple_tiles = temple_tiles
             s.temple_hidden_stack = temple_hidden_stack
 
-        s.task_marker_stack = self._build_task_marker_stack()
+        s.task_marker_stacks = self._build_task_marker_stacks()
 
         self._advance_after_turn(s)
         return s

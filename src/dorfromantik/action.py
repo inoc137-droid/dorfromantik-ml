@@ -3,7 +3,7 @@ from typing import Optional
 import dorfromantik.tile_types as tt
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Action:
     # "place_tile", "store_tile", "choose_source" (,"adjust_task_goal", "choose_from_3_task_tiles","place_structure")
     kind: str

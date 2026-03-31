@@ -11,7 +11,12 @@ from dorfromantik.scoring import score_rules
 from dorfromantik import tile_types as tt
 
 
-def run_one_episode(seed: int):
+def run_one_episode(
+        seed: int,
+        do_consistency_checks: bool = False,
+        do_scoring: bool = False,
+        use_fast_step: bool = False,
+):
     env = Env(seed=seed)
     s = env.reset(seed=seed)
     rng = random.Random(seed)
@@ -28,10 +33,16 @@ def run_one_episode(seed: int):
                 break
 
             action = acts[rng.randrange(len(acts))]
-            s, reward, done, info = env.step(s, action)
+
+            if use_fast_step:
+                s, done = env.step_fast(s, action)
+            else:
+                s, reward, done, info = env.step(s, action)
+
             steps += 1
 
-            check_dsu_consistency(s, verbose=False)
+            if do_consistency_checks:
+                check_dsu_consistency(s, verbose=False)
 
             if done:
                 if s.current_tile is None:
@@ -65,7 +76,7 @@ def run_one_episode(seed: int):
             river_max = river_dsu.max_size
 
     # Berechnung Punkte nach Score-Sheet
-    rules_score = score_rules(s)
+    rules_score = score_rules(s) if do_scoring else None
 
     return {
         "seed": seed,
@@ -82,7 +93,7 @@ def summarize(results: list[dict]):
     steps = [r["steps"] for r in results]
     road_maxes = [r["road_max"] for r in results]
     river_maxes = [r["river_max"] for r in results]
-    rules_scores = [r["rules_score"] for r in results]
+    rules_scores = [r["rules_score"] for r in results if r["rules_score"] is not None]
 
     end_reason_counts = {}
     for r in results:
@@ -129,6 +140,10 @@ def main():
     start_seed = 0
     progress_every = 200
 
+    do_consistency_checks = False
+    do_scoring = False
+    use_fast_step = True
+
     results = []
 
     t0 = time.perf_counter()
@@ -139,7 +154,12 @@ def main():
         if i % progress_every == 0:
             print(f"Run {i}/{n_runs}")
 
-        result = run_one_episode(seed)
+        result = run_one_episode(
+            seed,
+            do_consistency_checks=do_consistency_checks,
+            do_scoring=do_scoring,
+            use_fast_step=use_fast_step,
+        )
         results.append(result)
 
         if result["error"] is not None:
@@ -161,5 +181,25 @@ def main():
     print("runs_per_second       :", round(runs_per_second, 2))
 
 
-if __name__ == "__main__":
+def profile_main():
+    import cProfile
+    import pstats
+
+    profiler = cProfile.Profile()
+    profiler.enable()
+
     main()
+
+    profiler.disable()
+    stats = pstats.Stats(profiler)
+    stats.sort_stats("cumtime").print_stats(40)
+
+
+if __name__ == "__main__":
+    do_profile = False
+
+    if do_profile:
+        profile_main()
+    else:
+        main()
+
