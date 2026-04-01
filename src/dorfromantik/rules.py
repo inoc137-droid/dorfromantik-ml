@@ -73,7 +73,7 @@ def is_legal_placement(
                 return False
 
     # darf nicht isoliert liegen (außer erstes Tile)
-    if not has_neighbor and not state.is_empty():
+    if not has_neighbor and not is_empty:
         return False
 
     return True

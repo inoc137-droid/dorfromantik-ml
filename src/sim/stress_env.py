@@ -1,4 +1,6 @@
 from __future__ import annotations
+from concurrent.futures import ProcessPoolExecutor
+import os
 
 import random
 import statistics
@@ -9,6 +11,16 @@ from dorfromantik.env import Env
 from sim.debug_checks import check_dsu_consistency
 from dorfromantik.scoring import score_rules
 from dorfromantik import tile_types as tt
+
+
+def _run_one_episode_from_args(args):
+    seed, do_consistency_checks, do_scoring, use_fast_step = args
+    return run_one_episode(
+        seed,
+        do_consistency_checks=do_consistency_checks,
+        do_scoring=do_scoring,
+        use_fast_step=use_fast_step,
+    )
 
 
 def run_one_episode(
@@ -89,6 +101,79 @@ def run_one_episode(
     }
 
 
+def run_many_serial(
+        n_runs: int,
+        start_seed: int,
+        progress_every: int,
+        do_consistency_checks: bool,
+        do_scoring: bool,
+        use_fast_step: bool,
+):
+    results = []
+
+    for i in range(n_runs):
+        seed = start_seed + i
+
+        if i % progress_every == 0:
+            print(f"Run {i}/{n_runs}")
+
+        result = run_one_episode(
+            seed,
+            do_consistency_checks=do_consistency_checks,
+            do_scoring=do_scoring,
+            use_fast_step=use_fast_step,
+        )
+        results.append(result)
+
+        if result["error"] is not None:
+            err = result["error"]
+            print("\n===== ERROR DETECTED =====")
+            print(f"seed      : {err['seed']}")
+            print(f"step      : {err['step']}")
+            print(f"type      : {err['exception_type']}")
+            print(f"message   : {err['message']}")
+            print("\nTraceback:")
+            print(err["traceback"])
+
+    return results
+
+
+def run_many_parallel(
+        n_runs: int,
+        start_seed: int,
+        progress_every: int,
+        do_consistency_checks: bool,
+        do_scoring: bool,
+        use_fast_step: bool,
+        max_workers: int | None = None,
+):
+    results = []
+
+    args_list = [
+        (start_seed + i, do_consistency_checks, do_scoring, use_fast_step)
+        for i in range(n_runs)
+    ]
+
+    with ProcessPoolExecutor(max_workers=max_workers) as executor:
+        for i, result in enumerate(executor.map(_run_one_episode_from_args, args_list), start=0):
+            if i % progress_every == 0:
+                print(f"Run {i}/{n_runs}")
+
+            results.append(result)
+
+            if result["error"] is not None:
+                err = result["error"]
+                print("\n===== ERROR DETECTED =====")
+                print(f"seed      : {err['seed']}")
+                print(f"step      : {err['step']}")
+                print(f"type      : {err['exception_type']}")
+                print(f"message   : {err['message']}")
+                print("\nTraceback:")
+                print(err["traceback"])
+
+    return results
+
+
 def summarize(results: list[dict]):
     steps = [r["steps"] for r in results]
     road_maxes = [r["road_max"] for r in results]
@@ -136,41 +221,38 @@ def summarize(results: list[dict]):
 
 
 def main():
-    n_runs = 2000
+    n_runs = 100000
     start_seed = 0
-    progress_every = 200
+    progress_every = 20000
 
     do_consistency_checks = False
     do_scoring = False
     use_fast_step = True
 
-    results = []
+    use_multiprocessing = True
+    max_workers = os.cpu_count()
 
     t0 = time.perf_counter()
 
-    for i in range(n_runs):
-        seed = start_seed + i
-
-        if i % progress_every == 0:
-            print(f"Run {i}/{n_runs}")
-
-        result = run_one_episode(
-            seed,
+    if use_multiprocessing:
+        results = run_many_parallel(
+            n_runs=n_runs,
+            start_seed=start_seed,
+            progress_every=progress_every,
+            do_consistency_checks=do_consistency_checks,
+            do_scoring=do_scoring,
+            use_fast_step=use_fast_step,
+            max_workers=max_workers,
+        )
+    else:
+        results = run_many_serial(
+            n_runs=n_runs,
+            start_seed=start_seed,
+            progress_every=progress_every,
             do_consistency_checks=do_consistency_checks,
             do_scoring=do_scoring,
             use_fast_step=use_fast_step,
         )
-        results.append(result)
-
-        if result["error"] is not None:
-            err = result["error"]
-            print("\n===== ERROR DETECTED =====")
-            print(f"seed      : {err['seed']}")
-            print(f"step      : {err['step']}")
-            print(f"type      : {err['exception_type']}")
-            print(f"message   : {err['message']}")
-            print("\nTraceback:")
-            print(err["traceback"])
 
     t_total = time.perf_counter() - t0
     runs_per_second = n_runs / t_total if t_total > 0 else 0
