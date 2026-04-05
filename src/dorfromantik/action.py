@@ -7,6 +7,7 @@ import dorfromantik.tile_types as tt
 class Action:
     # "place_tile", "store_tile", "choose_source" (,"adjust_task_goal", "choose_from_3_task_tiles","place_structure")
     kind: str
+    tile_id: Optional[int] = None
     pos: Optional[tt.Pos] = None
     rot: Optional[int] = None
     # "storehouse", "kontor", "plus_one", "minus_one", "draw_2_more_tasks", "bridge", "gate", "temple"

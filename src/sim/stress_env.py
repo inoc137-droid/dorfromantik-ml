@@ -221,9 +221,9 @@ def summarize(results: list[dict]):
 
 
 def main():
-    n_runs = 100000
+    n_runs = 2000
     start_seed = 0
-    progress_every = 20000
+    progress_every = 500
 
     do_consistency_checks = False
     do_scoring = False
@@ -278,7 +278,7 @@ def profile_main():
 
 
 if __name__ == "__main__":
-    do_profile = False
+    do_profile = True
 
     if do_profile:
         profile_main()

@@ -83,6 +83,40 @@ class Env:
 
         return stacks
 
+    def _place_initial_tile(self, s: State) -> None:
+        """
+        Legt das erste gezogene Plättchen automatisch auf die Startposition.
+        Dadurch beginnt das Spiel immer mit einem bereits gesetzten Startplättchen
+        auf (0, 0) in Rotation 0.
+        """
+        if s.current_tile is None:
+            return
+
+        tile_id = s.current_tile
+        tile = TILES[tile_id]
+        start_pos = (0, 0)
+        start_rot = 0
+
+        s.place_tile(start_pos, tile_id, start_rot)
+        update_all_dsus_after_place(s, start_pos)
+        update_neighbor_dsus_after_place(s, start_pos)
+
+        if tile.tile_group == tt.TileGroup.Auftrag and tile.task_type is not None:
+            marker = self._draw_task_marker(s, tile.task_type)
+            if marker is not None:
+                s.active_tasks.append(
+                    tasks.ActiveTask(
+                        pos=start_pos,
+                        task_type=tile.task_type,
+                        marker=marker,
+                    )
+                )
+
+        self.update_active_tasks(s)
+        s.current_tile = None
+        s.current_tile_source = None
+        self._advance_after_turn(s)
+
 #########################################
 # Zug Logik: Phase > action.kind > choice
 #########################################
@@ -119,6 +153,7 @@ class Env:
                 return self._illegal_action_result(s, action)
             drawn_tile = s.storehouse_tile
             s.current_tile = s.storehouse_tile
+            s.current_tile_source = "storehouse"
             s.storehouse_tile = None
             chosen_source = "storehouse"
             s.phase = "place_tile"
@@ -128,6 +163,7 @@ class Env:
                 return self._illegal_action_result(s, action)
             drawn_tile = s.kontor_tile
             s.current_tile = s.kontor_tile
+            s.current_tile_source = "kontor"
             s.kontor_tile = None
             chosen_source = "kontor"
             s.phase = "place_tile"
@@ -143,6 +179,7 @@ class Env:
             chosen_source = "task"
             self._draw_task_tile(s)
             drawn_tile = s.current_tile
+            s.current_tile_source = "task"
 
         else:
             return self._illegal_action_result(s, action)
@@ -168,6 +205,7 @@ class Env:
             if s.storehouse_tile is None:
                 return s, True
             s.current_tile = s.storehouse_tile
+            s.current_tile_source = "storehouse"
             s.storehouse_tile = None
             s.phase = "place_tile"
 
@@ -175,6 +213,7 @@ class Env:
             if s.kontor_tile is None:
                 return s, True
             s.current_tile = s.kontor_tile
+            s.current_tile_source = "kontor"
             s.kontor_tile = None
             s.phase = "place_tile"
 
@@ -248,6 +287,7 @@ class Env:
 
             # aktuelles Tile ist jetzt weggeparkt
             s.current_tile = None
+            s.current_tile_source = None
 
             # nächsten Schritt vorbereiten
             self._advance_after_turn(s)
@@ -291,6 +331,7 @@ class Env:
             s.place_tile(pos, tile_id, rot, edge_overrides=edge_overrides)
 
             # Sonderaktionen verbrauchen
+            # warum wird das immer wieder auf False gesetzt?
             sackgasse_used: bool = False
             staudamm_used: bool = False
 
@@ -329,6 +370,7 @@ class Env:
 
             # aktuelles Tile ist verbraucht
             s.current_tile = None
+            s.current_tile_source = None
 
             # nächsten Schritt vorbereiten
             self._advance_after_turn(s)
@@ -394,6 +436,7 @@ class Env:
                 return s, True
 
             s.current_tile = None
+            s.current_tile_source = None
             self._advance_after_turn(s)
 
             done = (
@@ -457,6 +500,7 @@ class Env:
             self.update_active_tasks(s)
 
             s.current_tile = None
+            s.current_tile_source = None
             self._advance_after_turn(s)
 
             done = (
@@ -478,14 +522,14 @@ class Env:
             actions = []
 
             if s.storehouse_tile is not None:
-                actions.append(Action(kind="choose_source", choice="storehouse"))
+                actions.append(Action(tile_id=s.current_tile, kind="choose_source", choice="storehouse"))
             if s.kontor_tile is not None:
-                actions.append(Action(kind="choose_source", choice="kontor"))
+                actions.append(Action(tile_id=s.current_tile, kind="choose_source", choice="kontor"))
 
             if self._should_offer_task_tile(s):
-                actions.append(Action(kind="choose_source", choice="task"))
+                actions.append(Action(tile_id=s.current_tile, kind="choose_source", choice="task"))
             elif s.main_stack:
-                actions.append(Action(kind="choose_source", choice="main"))
+                actions.append(Action(tile_id=s.current_tile, kind="choose_source", choice="main"))
 
             return actions
 
@@ -498,11 +542,12 @@ class Env:
             tile = TILES[tile_id]
             is_landscape = tile.tile_group == tt.TileGroup.Landschaft
             is_sonder = tile.tile_group == tt.TileGroup.Sonder
+            came_from_storage = s.current_tile_source in ("storehouse", "kontor")
 
             for pos, rot in legal_actions(s, tile_id):
                 # jede mögliche Kombination aus (pos, rot) um Tile zu legen
                 # wird bei Auftrags-, Sonder- und normalen Landschaftsplättchen ausgelöst
-                actions.append(Action(kind="place_tile", pos=pos, rot=rot))
+                actions.append(Action(tile_id=s.current_tile, kind="place_tile", pos=pos, rot=rot))
 
                 if not is_landscape:
                     continue
@@ -514,6 +559,7 @@ class Env:
                         if is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
                             actions.append(
                                 Action(
+                                    tile_id=s.current_tile,
                                     kind="place_tile",
                                     pos=pos,
                                     rot=rot,
@@ -530,6 +576,7 @@ class Env:
                         if is_legal_placement(s, pos, tile_id, rot, edge_overrides=edge_overrides):
                             actions.append(
                                 Action(
+                                    tile_id=s.current_tile,
                                     kind="place_tile",
                                     pos=pos,
                                     rot=rot,
@@ -540,16 +587,16 @@ class Env:
                             )
 
             # Möglichkeiten das Landschaftsplättchen ins Warenhaus oder Kontor zu legen
-            if is_landscape:
+            if is_landscape and not came_from_storage:
                 if s.storehouse_tile is None:
-                    actions.append(Action(kind="store_tile", choice="storehouse"))
+                    actions.append(Action(tile_id=s.current_tile, kind="store_tile", choice="storehouse"))
                 if s.kontor_tile is None:
-                    actions.append(Action(kind="store_tile", choice="kontor"))
+                    actions.append(Action(tile_id=s.current_tile, kind="store_tile", choice="kontor"))
 
             # zusätzliche Möglichkeit das Sonderplättchen ins Kontor zu legen
-            if is_sonder:
+            if is_sonder and not came_from_storage:
                 if s.kontor_tile is None:
-                    actions.append(Action(kind="store_tile", choice="kontor"))
+                    actions.append(Action(tile_id=s.current_tile, kind="store_tile", choice="kontor"))
 
             return actions
 
@@ -566,7 +613,9 @@ class Env:
         # stored_tile nehmen
         if has_stored_tile:
             s.current_tile = None
+            s.current_tile_source = None
             s.phase = "choose_next_tile_source"
+            return
 
         # Falls kein Tile stored in Lagerhaus oder Kontor
         if self._should_offer_task_tile(s):
@@ -586,8 +635,10 @@ class Env:
     def _draw_task_tile(self, s: State) -> None:
         if s.task_stack:
             s.current_tile = s.task_stack.pop()
+            s.current_tile_source = "task"
         else:
             s.current_tile = None
+            s.current_tile_source = None
         s.phase = "place_tile"
 
     def _draw_task_marker(self, s: State, task_type: tt.TaskType) -> tasks.TaskMarker | None:
@@ -649,8 +700,10 @@ class Env:
     def _draw_main_tile(self, s: State) -> None:
         if s.main_stack:
             s.current_tile = s.main_stack.pop()
+            s.current_tile_source = "main"
         else:
             s.current_tile = None
+            s.current_tile_source = None
         s.phase = "place_tile"
 
     # def _result_after_state_change(self, s: State):
@@ -694,7 +747,8 @@ class Env:
 
         s.task_marker_stacks = self._build_task_marker_stacks()
 
-        self._advance_after_turn(s)
+        self._draw_task_tile(s)
+        self._place_initial_tile(s)
         return s
 
     ############################################

@@ -21,6 +21,7 @@ class PlacedTile:
 class State:
     board: Dict[tt.Pos, PlacedTile] = field(default_factory=dict)
     current_tile: Optional[int] = None
+    current_tile_source: Optional[str] = None  # "main", "task", "kontor", "storehouse", ...
     frontier: Set[tt.Pos] = field(default_factory=lambda: {(0, 0)})
 
     #  "place_tile", "choose_next_tile_source", "choose_task_tile", "choose_special_effect", "place_structure"
