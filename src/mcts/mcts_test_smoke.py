@@ -39,7 +39,7 @@ def print_history(history: list[tuple[str, int]]) -> None:
     print(f"{'Schritt':>6} | {'Gewählte Aktion':<65} | {'score_rules':>11}")
     print("-" * 90)
 
-    for i, (action_str, score) in enumerate(history, start=1):
+    for i, (action_str, score) in enumerate(history, start=0):
         action_short = action_str[:65]
         print(f"{i:>6} | {action_short:<65} | {score:>11}")
 
@@ -93,7 +93,7 @@ def main():
     seed = 1
     n_iterations = 1000
     exploration_constant = 1.4
-    rollout_depth_limit = 4   # z.B. 10
+    rollout_depth_limit = 5   # z.B. 10
     rng_seed = 1
 
     # Modus:
@@ -106,6 +106,11 @@ def main():
     adapter = DorfromantikAdapter(env)
 
     history: list[tuple[str, int]] = []
+    start_tile_history_entry = (
+        f"kind=place_tile, tile_id={state.board[(0, 0)].tile_id}, pos=(0, 0), rot=0",
+        score_rules(state),
+    )
+    history.append(start_tile_history_entry)
     step_idx = 0
 
     if mode == "interactive":
@@ -159,8 +164,6 @@ def main():
             step_idx=step_idx,
             verbose=(mode == "interactive"),
         )
-
-        print(chosen_action, current_score)
 
         if chosen_action is not None:
             history.append((format_action(chosen_action), current_score))
