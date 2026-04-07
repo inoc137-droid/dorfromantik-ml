@@ -211,23 +211,24 @@ def render_board(board: Dict[Tuple[int, int], Any], tile_dir: Path = TILE_DIR) -
     return canvas
 
 
-def show_board_image(img: Image.Image, board: Dict[Tuple[int, int], Any] | None = None) -> None:
+def show_board_image(
+    img: Image.Image,
+    board: Dict[Tuple[int, int], Any] | None = None,
+    *,
+    block: bool = True,
+) -> None:
     arr = np.array(img)
 
-    # Figure 1 wiederverwenden oder neu anlegen
     fig = plt.figure(1)
     fig.clf()
 
-    # Nur beim ersten echten Anzeigen maximieren
     manager = plt.get_current_fig_manager()
     if not hasattr(fig, "_window_prepared"):
         try:
-            # TkAgg unter Windows
-            1
+            pass
             # manager.window.state("zoomed")
         except Exception:
             try:
-                # Qt / andere Backends
                 manager.full_screen_toggle()
             except Exception:
                 try:
@@ -270,16 +271,11 @@ def show_board_image(img: Image.Image, board: Dict[Tuple[int, int], Any] | None 
             py = cy + offset_y
             ax.text(px, py, f"({q},{r})", ha="center", va="center")
 
-    fig.canvas.draw_idle()
-    plt.pause(0.001)
-
-def render_and_show(board: Dict[Tuple[int, int], Any]) -> Image.Image:
-    img = render_board(board)
-    if SAVE_OUTPUT:
-        img.save(OUTPUT_FILE)
-        print(f"Gespeichert unter: {OUTPUT_FILE}")
-    show_board_image(img, board)
-    return img
+    if block:
+        plt.show(block=True)
+    else:
+        fig.canvas.draw_idle()
+        plt.pause(0.001)
 
 
 # ============================================================
