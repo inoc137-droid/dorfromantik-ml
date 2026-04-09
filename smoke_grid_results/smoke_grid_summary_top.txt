@@ -1,0 +1,23 @@
+Top-Konfigurationen nach mean_final_score
+rank | config_id | mean_score | std_score | mean_runtime | iters | depth | root | leaf
+----------------------------------------------------------------------------------------------------
+   1 | cfg_0024_it50_depth2_root1_leaf1 |     17.900 |     6.454 |       18.880 |    50 |     2 |    1 |    1
+   2 | cfg_0029_it50_depth4_root1_leaf4 |     17.500 |     6.187 |       24.247 |    50 |     4 |    1 |    4
+   3 | cfg_0034_it50_depth6_root2_leaf1 |     16.500 |     5.893 |       28.081 |    50 |     6 |    2 |    1
+   4 | cfg_0028_it50_depth4_root1_leaf1 |     15.500 |     7.246 |       24.386 |    50 |     4 |    1 |    1
+   5 | cfg_0026_it50_depth2_root2_leaf1 |     14.900 |     5.065 |       18.270 |    50 |     2 |    2 |    1
+   6 | cfg_0030_it50_depth4_root2_leaf1 |     13.100 |     6.315 |       24.421 |    50 |     4 |    2 |    1
+   7 | cfg_0031_it50_depth4_root2_leaf4 |     13.100 |     9.445 |       25.187 |    50 |     4 |    2 |    4
+   8 | cfg_0005_it10_depth4_root1_leaf4 |     12.700 |     4.111 |        4.497 |    10 |     4 |    1 |    4
+   9 | cfg_0027_it50_depth2_root2_leaf4 |     12.400 |     4.526 |       18.133 |    50 |     2 |    2 |    4
+  10 | cfg_0008_it10_depth6_root1_leaf1 |     12.200 |     5.095 |        5.800 |    10 |     6 |    1 |    1
+  11 | cfg_0019_it20_depth4_root2_leaf4 |     12.200 |     5.203 |        9.384 |    20 |     4 |    2 |    4
+  12 | cfg_0025_it50_depth2_root1_leaf4 |     11.800 |     3.645 |       20.213 |    50 |     2 |    1 |    4
+  13 | cfg_0017_it20_depth4_root1_leaf4 |     11.700 |     2.214 |        9.522 |    20 |     4 |    1 |    4
+  14 | cfg_0035_it50_depth6_root2_leaf4 |     11.700 |     3.860 |       28.690 |    50 |     6 |    2 |    4
+  15 | cfg_0032_it50_depth6_root1_leaf1 |     11.500 |     3.064 |       28.229 |    50 |     6 |    1 |    1
+  16 | cfg_0033_it50_depth6_root1_leaf4 |     11.500 |     3.536 |       28.392 |    50 |     6 |    1 |    4
+  17 | cfg_0006_it10_depth4_root2_leaf1 |     11.300 |     3.057 |        4.681 |    10 |     4 |    2 |    1
+  18 | cfg_0003_it10_depth2_root2_leaf4 |     11.100 |     3.281 |        3.630 |    10 |     2 |    2 |    4
+  19 | cfg_0015_it20_depth2_root2_leaf4 |     11.000 |     3.127 |        7.678 |    20 |     2 |    2 |    4
+  20 | cfg_0001_it10_depth2_root1_leaf4 |     10.800 |     4.131 |        3.497 |    10 |     2 |    1 |    4
