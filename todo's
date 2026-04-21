@@ -81,6 +81,7 @@ Cython, Numpy/Numba, taichi: https://www.youtube.com/watch?v=umLZphwA-dw
 
 ########################   UCB / UCT ########################
 
+Einfügen einer Single-Player UCT bei SP-MCTS: bei hoher varianz wichtig? 
 
 ######################## Maximum Depth Search 
 ########################
